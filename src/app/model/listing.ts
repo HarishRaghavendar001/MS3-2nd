@@ -6,5 +6,7 @@ export class Listing {
     area!:number
     propertyType!:string
     userRating!:number
+    mobile!:string
+    email!:string
     inquiryCount!:number
 }

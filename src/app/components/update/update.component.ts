@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-// import { title } from 'process';
 import { ListingServiceService } from 'src/app/service/listing-service.service';
 
 @Component({
-  selector: 'app-listing-form',
-  templateUrl: './listing-form.component.html',
-  styleUrls: ['./listing-form.component.css']
+  selector: 'app-update',
+  templateUrl: './update.component.html',
+  styleUrls: ['./update.component.css']
 })
-export class ListingFormComponent implements OnInit {
+export class UpdateComponent implements OnInit {
 
   listForm!:FormGroup
   successMessage!:string
@@ -38,22 +37,10 @@ export class ListingFormComponent implements OnInit {
       inquiryCount:[0]
       })
    this.id = this.ar.snapshot.paramMap.get('id');
-   this.edit=!!this.id;
-   if(this.edit){
+  
+   if(this.id){
     this.service.getListById(this.id).subscribe((d)=>{
-      if(d){
-        this.listForm.patchValue({
-          title:d.title,
-          agent:d.agent,
-          description:d.description,
-          area:d.area,
-          propertyType:d.propertyType,
-          userRating:d.userRating,
-          mobile:d.mobile,
-          email:d.email,
-          inquiryCount:d.inquiryCount
-        })
-      }
+     this.listForm.patchValue(d)
     })
    }
   }
@@ -72,43 +59,17 @@ export class ListingFormComponent implements OnInit {
     return this.listForm.controls
   }
   onSubmit(): void {
-    if (this.listForm.invalid) {
-      return;
-    }
-
-
   if(this.listForm.valid){
-    // const formData = this.listForm.value;
-  
-    // if (this.edit) {
-    //   console.log(this.id)
-    //   this.service.updateList(this.id, formData).subscribe(()=>{
-    //     // console.log(this.id)
-    //   //  alert('updated')
-    //   this.successMessage="Updated Successfully"
-    //    this.r.navigate(['/getListing'])
-    //   });
-    // } else {
-      this.service.addListing(this.listForm.value).subscribe({
-        next: () => {
-          this.successMessage = "List added successfully";
-          // this.id=d
-          this.showAlert = true;
-          this.listForm.reset();
-          setTimeout(()=>this.successMessage='',3000)
-          //setTimeout(()=>this.successMessage='',3000)
-          // setTimeout(() => this.closeAlert(), 3000);
-         
-        },
-       error:()=>{
-        this.successMessage="Register error"
-        this.showAlert=true
-        setTimeout(()=>this.successMessage='',3000)
-       }
-     } );
-    }
-  }
 
+      console.log(this.id)
+      this.service.updateList(this.id, this.listForm.value).subscribe(()=>{
+        // console.log(this.id)
+      //  alert('updated')
+      this.successMessage="Updated Successfully"
+       this.r.navigate(['/getListing'])
+      });
+    
+}}
   closeAlert(): void {
     this.showAlert = false;
     this.successMessage = '';

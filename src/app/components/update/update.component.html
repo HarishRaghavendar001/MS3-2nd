@@ -1,3 +1,4 @@
+<!-- <p>update works!</p> -->
 <form [formGroup]="listForm" (ngSubmit)="onSubmit()">
     <label>Title: </label>
     <input type="text" formControlName="title">
@@ -63,12 +64,12 @@
     <label>InquiryCount: </label>
     <input type="text" formControlName="inquiryCount">
    <br><br>
-   <!-- <p>{{edit}}</p> -->
+   <p>{{edit}}</p>
    
-<!-- <button type="submit" [disabled]="listForm.invalid">
-    {{ edit ? 'Update' : 'Register' }}
-  </button> -->
-  <button type="submit" [disabled]="listForm.invalid">Register</button>
+<button type="submit" [disabled]="listForm.invalid">
+   Update
+  </button>
+
    <!-- <button [disabled]="!listForm.valid">Register</button> -->
    <div *ngIf="showAlert">{{successMessage}}</div>
 

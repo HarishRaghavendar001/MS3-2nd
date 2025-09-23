@@ -10,13 +10,16 @@ import { ListingServiceService } from 'src/app/service/listing-service.service';
 })
 export class ListFormIdComponent implements OnInit{
   stud$!:Listing
+  idval!:any
   constructor(private ar:ActivatedRoute,private service:ListingServiceService){}
   ngOnInit(): void {
-    this.ar.params.subscribe((d)=>{
-      const val = d['id']
-      this.getById(val)
-    }
-    )
+    // this.ar.params.subscribe((d)=>{
+    //   const val = d['id']
+    //   this.getById(val)
+    // }
+    // )
+    this.idval = this.ar.snapshot.paramMap.get('id')
+    this.getById(this.idval)
   }
   getById(id:Listing){
     this.service.getListById(id).subscribe((d)=>

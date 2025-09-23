@@ -17,4 +17,3 @@ export class FilterPipe implements PipeTransform {
   }
 
 }
-// git remote add origin https://github.com/HarishRaghavendar001/MS3-2nd.git

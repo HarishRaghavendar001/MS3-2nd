@@ -1,5 +1,6 @@
 <h1>List Details:</h1>
-<input type="text" placeholder="Enter title || agent" [(ngModel)]="searchTerm"/>
+<!-- <input type="text" placeholder="Enter title || agent" [(ngModel)]="searchTerm"/> -->
+ <input type="text" placeholder="enter title" (input)=" searchEvent($event)">
  <table>
     <tr>
         <th>Title</th>
@@ -8,17 +9,22 @@
         <th>Area</th>
         <th>Rating</th>
         <th>PropertyType</th>
+        <th>Mobile</th>
+        <th>Email</th>
         <th>InquiryCount</th>
         <th colspan="2">Action</th>
     </tr>
     <!-- <tr *ngFor="let l of ((finalData$ | async)||[])|filter:searchTerm"> -->
-    <tr *ngFor="let l of list |filter:searchTerm">
+        <tr *ngFor="let l of list ">
+    <!-- <tr *ngFor="let l of list |filter:searchTerm"> -->
         <td>{{l.title}}</td>
         <td>{{l.agent}}</td>
         <td>{{l.description}}</td>
         <td>{{l.area}}</td>
         <td>{{l.userRating}}</td>
         <td>{{l.propertyType}}</td>
+        <td>{{l.mobile}}</td>
+        <td>{{l.email}}</td>
         <td>{{l.inquiryCount}}</td>
         <!-- <td>{{l.title}}</td>
         <td>{{l.agent}}</td>
@@ -28,6 +34,8 @@
         <td>{{l.propertyType}}</td>
         <td>{{l.inquiryCount}}</td> -->
         <td><a [routerLink]="['/getListing/getListById', l.id]">View</a></td>
-        <td><a routerLink="/ deleteList/{{l.id}}">Delete</a></td>
+        <!-- <td><a routerLink="/addListing/{{l.id}}">Update</a></td> -->
+        <td><a routerLink="/updateList/{{l.id}}">Update</a></td>
+        <td><a routerLink="/getListing/deleteList/{{l.id}}">Delete</a></td>
     </tr>
  </table>

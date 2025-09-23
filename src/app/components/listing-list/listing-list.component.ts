@@ -13,7 +13,7 @@ export class ListingListComponent implements OnInit {
   
     //  data$:Observable<Listing[]> =of([])
     //  finalData$!:Observable<Listing[]>
-    list:Listing[]=[]
+     list:Listing[]=[]
      searchTerm:string=''
      id$!:any
      constructor(private ar:ActivatedRoute,private r:Router,private service:ListingServiceService){}
@@ -29,11 +29,12 @@ export class ListingListComponent implements OnInit {
     }
     getList(){
       return this.service.getListing()
-      .pipe(map((d)=>{
-        const sort =d.sort((a:Listing,b:Listing)=>a.title.localeCompare(b.title))
-        localStorage.setItem('listarray',JSON.stringify(sort))
-        return sort
-      }))
+     .pipe(map((d)=>{
+      const sorted=d.sort((a:Listing,b:Listing)=>a.title.localeCompare(b.title))
+      localStorage.setItem('listarray',JSON.stringify(sorted))
+      return sorted
+      
+     }))
       .subscribe((li)=>{
         this.list=li
       }
@@ -57,12 +58,24 @@ export class ListingListComponent implements OnInit {
     //   })
     // }
     deleteListing(id:Listing){
+      console.log(id)
       return this.service.deleteList(id).subscribe(()=>{
         alert("Deleted")
         this.r.navigate(['/getListing']);
 
       }
+     
 
       )
+    }
+    searchEvent(e:any){
+      const valss =e.target.value.toLowerCase()
+      if(!valss){
+         return this.list
+      }
+        this.list= this.list.filter(val=>{
+          return val.title.toLowerCase().includes(valss)
+        })
+        return this.list
     }
 }

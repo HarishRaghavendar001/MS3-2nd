@@ -9,6 +9,7 @@ import { ListingFormComponent } from './components/listing-form/listing-form.com
 import { ListingListComponent } from './components/listing-list/listing-list.component';
 // import { FliterPipe } from './pipe/fliter.pipe';
 import { FilterPipe } from './pipe/filter.pipe';
+import { UpdateComponent } from './components/update/update.component';
 // import { ListingFormIDComponent } from './componets/listing-form-id/listing-form-id.component';
 // import { ListFormIdComponent } from './components/list-form-id/list-form-id.component'
 
@@ -19,7 +20,8 @@ import { FilterPipe } from './pipe/filter.pipe';
     ListingListComponent,
     ListingFormComponent,
     // FliterPipe
-    FilterPipe
+    FilterPipe,
+    UpdateComponent
   ],
   imports: [
     BrowserModule,
