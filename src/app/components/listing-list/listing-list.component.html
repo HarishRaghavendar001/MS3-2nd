@@ -1,41 +1,34 @@
-<h1>List Details:</h1>
-<!-- <input type="text" placeholder="Enter title || agent" [(ngModel)]="searchTerm"/> -->
- <input type="text" placeholder="enter title" (input)=" searchEvent($event)">
- <table>
-    <tr>
-        <th>Title</th>
-        <th>Agent</th>
-        <th>Description</th>
-        <th>Area</th>
-        <th>Rating</th>
-        <th>PropertyType</th>
-        <th>Mobile</th>
-        <th>Email</th>
-        <th>InquiryCount</th>
-        <th colspan="2">Action</th>
-    </tr>
-    <!-- <tr *ngFor="let l of ((finalData$ | async)||[])|filter:searchTerm"> -->
-        <tr *ngFor="let l of list ">
-    <!-- <tr *ngFor="let l of list |filter:searchTerm"> -->
-        <td>{{l.title}}</td>
-        <td>{{l.agent}}</td>
-        <td>{{l.description}}</td>
-        <td>{{l.area}}</td>
-        <td>{{l.userRating}}</td>
-        <td>{{l.propertyType}}</td>
-        <td>{{l.mobile}}</td>
-        <td>{{l.email}}</td>
-        <td>{{l.inquiryCount}}</td>
-        <!-- <td>{{l.title}}</td>
-        <td>{{l.agent}}</td>
-        <td>{{l.description}}</td>
-        <td>{{l.area}}</td>
-        <td>{{l.userRating}}</td>
-        <td>{{l.propertyType}}</td>
-        <td>{{l.inquiryCount}}</td> -->
-        <td><a [routerLink]="['/getListing/getListById', l.id]">View</a></td>
-        <!-- <td><a routerLink="/addListing/{{l.id}}">Update</a></td> -->
-        <td><a routerLink="/updateList/{{l.id}}">Update</a></td>
-        <td><a routerLink="/getListing/deleteList/{{l.id}}">Delete</a></td>
-    </tr>
- </table>
+<h2>Course Listing Details</h2>
+<input type="text" placeholder="enter courName || id"(input)="searchValue($event)">
+<table>
+  <tr>
+    <th>Course ID</th>
+    <th>Course Name</th>
+    <th>Enrollment Count</th>
+    <th>Status</th>
+    <th>Publish Date</th>
+    <th>Category</th>
+    <th>Fees</th>
+    <th>Mobile</th>
+    <th>Email</th>
+    <th>Start Date</th>
+    <th>End Date</th>
+    <th colspan="3">Action</th>
+  </tr>
+  <tr *ngFor="let list of  filtered$ | async">
+    <td>{{ list.id }}</td>
+    <td>{{ list.courseName }}</td>
+    <td>{{ list.enrollmentCount }}</td>
+    <td>{{ list.status}}</td>
+    <td>{{ list.publishDate }}</td>
+    <td>{{ list.category }}</td>
+    <td>₹ {{ list.fees }}</td>
+    <td>{{ list.mobile }}</td>
+    <td>{{ list.email }}</td>
+    <td>{{ list.startD }}</td>
+    <td>{{ list.endD }}</td>
+    <td><a routerLink="/getListing/deleteList/{{list.id}}">delete</a></td>
+    <td><a [routerLink]="['/getListing/getListById', list.id]">View</a></td>
+    <td><a routerLink="/addListing/{{list.id}}">update</a></td>
+  </tr>
+</table>

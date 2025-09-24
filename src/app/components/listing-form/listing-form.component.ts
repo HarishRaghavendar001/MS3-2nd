@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Listing } from 'src/app/model/listing';
+// import { start } from 'repl';
+// import { last } from 'rxjs';
 // import { title } from 'process';
 import { ListingServiceService } from 'src/app/service/listing-service.service';
 
@@ -9,108 +12,128 @@ import { ListingServiceService } from 'src/app/service/listing-service.service';
   templateUrl: './listing-form.component.html',
   styleUrls: ['./listing-form.component.css']
 })
-export class ListingFormComponent implements OnInit {
+export class ListingFormComponent {
 
-  listForm!:FormGroup
-  successMessage!:string
-  showAlert:boolean=false
-  id:any
-  edit:boolean=false
-  propertyType:string[]=['Apartment','House','Commercial']
-  constructor(private fb:FormBuilder,private service:ListingServiceService,private ar:ActivatedRoute,private r:Router){
-   
+ list:FormGroup
+ courseStatus:string[]=['Draft','Published','Archieved','Retried']
+ success:string=''
+ errorsm:string=''
+ isFollow:boolean =false
+ updId!:any
+ constructor(private fb:FormBuilder,private ar:ActivatedRoute,private r:Router,private service:ListingServiceService){
+  this.list=this.fb.group({
+    id:["",[Validators.required,this.uniqueId]],
+    courseName:["",[Validators.required]],
+    enrollmentCount:["",[Validators.required,Validators.min(1)]],
+    status:[this.courseStatus[0]],
+    publishDate:["",[Validators.required,this.dateValid]],
+    category:["",[Validators.required]],
+    fees:["",[Validators.required,this.positiveValue]],
+    mobile:["",[Validators.required,Validators.pattern('^[6-9][0-9]{9}$')]],
+    email:["",[Validators.required,Validators.email]],
+    startD:["",[Validators.required,this.dateValid]],
+    endD:["",[Validators.required,this.dateValid]],
+  },{validators:this.dateRange})
 
+  this.ar.params.subscribe((para)=>{
+    this.updId=para['id']
+    this.getAppointment(this.updId)
+  })
+ }
+ dateValid(control:AbstractControl):ValidationErrors|null
+{
+  const dcheck =/^\d{4}-\d{2}-\d{2}$/
+  if(!dcheck.test(control.value)){
+    return{invalidDate:true}
   }
-  ngOnInit(): void {
-    this.listForm=this.fb.group({
-      title:["",[Validators.required]],
-      agent:["",[Validators.required,this.uniqueAgent]],
-      description:["",[Validators.required]],
-      area:["",[Validators.required,Validators.min(1),Validators.max(1000)]],
-      propertyType:["",[Validators.required]],
-      userRating:["",[Validators.required,Validators.min(1),Validators.max(5)]],
-      mobile:["",[Validators.required,Validators.pattern('^(\\+)?([0-9]{10,15})$')]],
-      email: ["", [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z0-9._]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
-      ]],
-      
-      inquiryCount:[0]
-      })
-   this.id = this.ar.snapshot.paramMap.get('id');
-   this.edit=!!this.id;
-   if(this.edit){
-    this.service.getListById(this.id).subscribe((d)=>{
-      if(d){
-        this.listForm.patchValue({
-          title:d.title,
-          agent:d.agent,
-          description:d.description,
-          area:d.area,
-          propertyType:d.propertyType,
-          userRating:d.userRating,
-          mobile:d.mobile,
-          email:d.email,
-          inquiryCount:d.inquiryCount
-        })
+  return null
+} 
+positiveValue(control:AbstractControl):ValidationErrors|null
+{
+  const  num=control.value
+  if(num<=0){
+    return {negative:true}
+  }
+ return null
+}
+dateRange(group: FormGroup): ValidationErrors | null {
+  const first = group.get('startD')?.value;
+  const last = group.get('endD')?.value;
+  if (first && last) {
+    const startDate = new Date(first);
+    const endDate = new Date(last);
+    if (endDate < startDate) {
+      return { range: true };
+    }
+  }
+  return null;
+}
+uniqueId(control:AbstractControl):ValidationErrors|null{
+  const listId = control.value;
+  let value = JSON.parse(localStorage.getItem('studentarray') || '[]');
+  console.log(value);
+  if (Array.isArray(value)) {
+    const ids = value.map((d: any) => d.id);
+    // console.log(emails)
+    if (ids.includes(listId)) {
+      return { duplicate: true };
+    }
+  }
+  return null;
+}
+get f(){
+  return this.list.controls
+ }
+
+ getAppointment(id:any){
+  this.service.getListByIds(id).subscribe((appointment:any)=>{
+    var data = appointment[0]
+    this.list.patchValue({
+      id:data.id,
+      courseName:data.courseName,
+      enrollmentCount:data.enrollmentCount,
+      status:data.status,
+      publishDate:data.publishDate,
+      category:data.category,
+      fees:data.fees,
+      mobile:data.mobile,
+      email:data.email,
+      starD:data.starD,
+      endD:data.endD
+    })
+
+  })
+ }
+onChange(e:any){
+  const val = e.target.value
+  if(val==='Follow-up'){
+    this.isFollow=true
+  }
+  else{
+    this.isFollow=false
+  }
+}
+ onSubmit():void{
+  if(this.list.valid){
+    if(this.updId){
+     this.service.updateList(this.updId,this.list.value).subscribe(()=>{
+      alert("updated")
+      this.r.navigate(['/getListing'])
+     })
+    }
+    else{this.service.addListing(this.list.value).subscribe({
+      next:()=>{
+        this.success="added"
+        this.list.reset()
+        setTimeout(()=>this.success='',3000)
+      },
+      error:()=>{
+        this.errorsm="error"
+        setTimeout(()=>this.errorsm='',3000)
       }
     })
-   }
-  }
-  uniqueAgent(control:AbstractControl):ValidationErrors|null{
-      const realagentss= control.value
-      let value = JSON.parse(localStorage.getItem('listarray') || '[]')
-      if(Array.isArray(value)){
-        const agents= value.map((d:any)=>d.agent)
-        if(agents.includes(realagentss)){
-          return {dupAgent:true}
-        }
-        }
-        return null
-      }
-  get f(){
-    return this.listForm.controls
-  }
-  onSubmit(): void {
-    if (this.listForm.invalid) {
-      return;
-    }
-
-
-  if(this.listForm.valid){
-    // const formData = this.listForm.value;
-  
-    // if (this.edit) {
-    //   console.log(this.id)
-    //   this.service.updateList(this.id, formData).subscribe(()=>{
-    //     // console.log(this.id)
-    //   //  alert('updated')
-    //   this.successMessage="Updated Successfully"
-    //    this.r.navigate(['/getListing'])
-    //   });
-    // } else {
-      this.service.addListing(this.listForm.value).subscribe({
-        next: () => {
-          this.successMessage = "List added successfully";
-          // this.id=d
-          this.showAlert = true;
-          this.listForm.reset();
-          setTimeout(()=>this.successMessage='',3000)
-          //setTimeout(()=>this.successMessage='',3000)
-          // setTimeout(() => this.closeAlert(), 3000);
-         
-        },
-       error:()=>{
-        this.successMessage="Register error"
-        this.showAlert=true
-        setTimeout(()=>this.successMessage='',3000)
-       }
-     } );
-    }
-  }
-
-  closeAlert(): void {
-    this.showAlert = false;
-    this.successMessage = '';
-  }
+  }}
+ }
+ 
 }  
+// git remote add origin https://github.com/HarishRaghavendar001/Miles-3.git

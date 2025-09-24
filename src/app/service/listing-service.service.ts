@@ -7,23 +7,26 @@ import { Listing } from '../model/listing';
   providedIn: 'root'
 })
 export class ListingServiceService {
-   api:string="https://ec2-13-233-193-134.projects.wecreateproblems.com/proxy/5000/listings"
+   api:string="https://ec2-13-233-104-225.projects.wecreateproblems.com/proxy/5000/listings"
   constructor(private httpCall:HttpClient) { }
-  getListing():Observable<Listing[]>{
-    return this.httpCall.get<Listing[]>(this.api).pipe(map((d)=>{
-      if(Array.isArray(d)){
-     return d
-      }
-      else{
-        return [d]
-      }
-    }))
+  getListing():Observable<any>{
+    return this.httpCall.get(this.api)
   }
   addListing(list:Listing):Observable<any>{
     return this.httpCall.post(this.api,list)
   }
   getListById(id:Listing):Observable<any>{
     return this.httpCall.get(this.api+"/"+id)
+  }
+  getListByIds(id:Listing):Observable<any[]>{
+    return this.httpCall.get<[]>(this.api+"/"+id).pipe(map((d)=>{
+      if(Array.isArray(d)){
+        return d
+      }
+      else{
+        return [d]
+      }
+    }))
   }
   deleteList(id:Listing):Observable<any>{
     return this.httpCall.delete(this.api+"/"+id)

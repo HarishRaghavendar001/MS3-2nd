@@ -1,12 +1,13 @@
 export class Listing {
-    id!:number
-    title!:string
-    agent!:string
-    description!:string
-    area!:number
-    propertyType!:string
-    userRating!:number
-    mobile!:string
+    id!:string
+    courseName!:string
+    enrollmentCount!:string
+    publishDate!:string
+    status!:string
+    category!:string
+    fees!:number
+    mobile!:number
     email!:string
-    inquiryCount!:number
+    startD!:string
+    endD!:string
 }

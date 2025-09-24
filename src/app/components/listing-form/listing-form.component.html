@@ -1,75 +1,136 @@
-<form [formGroup]="listForm" (ngSubmit)="onSubmit()">
-    <label>Title: </label>
-    <input type="text" formControlName="title">
-    <div *ngIf="f['title'].errors && f['title'].touched">
-        <small *ngIf="f['title'].errors['required']">Title is required</small>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Add Course Listing</h2>
+  
+    <!-- Success Alert -->
+    <div *ngIf="success" class="alert alert-success text-center">
+      {{ success }}
+    </div>
+  
+    <!-- Error Alert -->
+    <div *ngIf="errorsm" class="alert alert-danger text-center">
+      {{ errorsm }}
+    </div>
+  
+    <form [formGroup]="list" (ngSubmit)="onSubmit()" >
+      <div class="row">
+        <!-- ID -->
+        <div class="col-md-6 mb-3">
+          <label for="id" class="form-label">Course ID</label>
+          <input type="text" id="id" class="form-control" formControlName="id" />
+          <div *ngIf="f['id'].touched && f['id'].errors" class="text-danger small">
+            <div *ngIf="f['id'].errors['required']">ID is required.</div>
+            <div *ngIf="f['id'].errors['duplicate']">ID already exists.</div>
+          </div>
+        </div>
+  
+        <!-- Course Name -->
+        <div class="col-md-6 mb-3">
+          <label for="courseName" class="form-label">Course Name</label>
+          <input type="text" id="courseName" class="form-control" formControlName="courseName" />
+          <div *ngIf="f['courseName'].touched && f['courseName'].invalid" class="text-danger small">
+            Course Name is required.
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <!-- Enrollment Count -->
+        <div class="col-md-6 mb-3">
+          <label for="enrollmentCount" class="form-label">Enrollment Count</label>
+          <input type="number" id="enrollmentCount" class="form-control" formControlName="enrollmentCount" />
+          <div *ngIf="f['enrollmentCount'].touched && f['enrollmentCount'].invalid" class="text-danger small">
+            <div *ngIf="f['enrollmentCount'].errors?.['required']">Enrollment count is required.</div>
+            <div *ngIf="f['enrollmentCount'].errors?.['min']">Must be at least 1.</div>
+          </div>
+        </div>
+  
+        <!-- Status -->
+        <div class="col-md-6 mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select id="status" class="form-select" formControlName="status">
+            <option *ngFor="let s of courseStatus" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+      </div>
+  
+      <div class="row">
+        <!-- Publish Date -->
+        <div class="col-md-6 mb-3">
+          <label for="publishDate" class="form-label">Publish Date</label>
+          <input type="text" id="publishDate" class="form-control" formControlName="publishDate" />
+          <div *ngIf="f['publishDate'].touched && f['publishDate'].invalid" class="text-danger small">
+            <div *ngIf="f['publishDate'].errors?.['required']">Publish date is required.</div>
+            <div *ngIf="f['publishDate'].errors?.['invalidDate']">Invalid date format.</div>
+          </div>
+        </div>
+  
+        <!-- Category -->
+        <div class="col-md-6 mb-3">
+          <label for="category" class="form-label">Category</label>
+          <input type="text" id="category" class="form-control" formControlName="category" />
+          <div *ngIf="f['category'].touched && f['category'].invalid" class="text-danger small">
+            Category is required.
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <!-- Fees -->
+        <div class="col-md-6 mb-3">
+          <label for="fees" class="form-label">Fees</label>
+          <input type="number" id="fees" class="form-control" formControlName="fees" />
+          <div *ngIf="f['fees'].touched && f['fees'].errors" class="text-danger small">
+            <div *ngIf="f['fees'].errors['required']">Fees are required.</div>
+            <div *ngIf="f['fees'].errors['negative']">Value must be positive.</div>
+          </div>
+        </div>
+  
+        <!-- Mobile -->
+        <div class="col-md-6 mb-3">
+          <label for="mobile" class="form-label">Mobile Number</label>
+          <input type="text" id="mobile" class="form-control" formControlName="mobile" />
+          <div *ngIf="f['mobile'].touched && f['mobile'].errors" class="text-danger small">
+            <div *ngIf="f['mobile'].errors['required']">Mobile number is required.</div>
+            <div *ngIf="f['mobile'].errors['pattern']">Enter a valid 10-digit mobile number.</div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <!-- Email -->
+        <div class="col-md-6 mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" class="form-control" formControlName="email" />
+          <div *ngIf="f['email'].touched && f['email'].invalid" class="text-danger small">
+            <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
+            <div *ngIf="f['email'].errors?.['email']">Invalid email format.</div>
+          </div>
+        </div>
+  
+        <label>From:</label>
+    <input type="date" formControlName="startD">
+    <div *ngIf="f['startD'].errors && f['startD'].touched">
+        <small *ngIf="f['startD'].errors['required']">Date is required</small>
     </div>
     <br><br>
-
-    <label>Agent: </label>
-    <input type="text" formControlName="agent">
-    <div *ngIf="f['agent'].errors && f['agent'].touched">
-        <small *ngIf="f['agent'].errors['required']">Agent is required</small>
-        <small *ngIf="f['agent'].errors['dupAgent']">Agent already Exist</small>
+    <label>To:</label>
+    <input type="date" formControlName="endD">
+    <div *ngIf="f['endD'].errors && f['endD'].touched">
+        <small *ngIf="f['endD'].errors['required']">Date is required</small>
     </div>
     <br><br>
-
-    <label>Description: </label><br>
-    <textarea type="text" formControlName="description"></textarea>
-    <div *ngIf="f['description'].errors && f['description'].touched">
-        <small *ngIf="f['description'].errors['required']">Description is required</small>
-    </div>
-    <br><br>
+    <!-- Show range error at the group level -->
     
-    <label>Area: </label>
-    <input type="text" formControlName="area">
-    <div *ngIf="f['area'].errors && f['area'].touched">
-        <small *ngIf="f['area'].errors['required']">Agent is required</small>
-        <small *ngIf="f['area'].errors['min'] || f['area'].errors['max']">Area must be between 1 to 1000</small>
-    </div>
-    <br><br>
-
-    <label>PropertyType:</label>
-    <select formControlName="propertyType">
-        <option value="">Select a property</option>
-        <option *ngFor="let type of propertyType" value="type">{{type}}</option>
-    </select>
-    <div *ngIf="f['propertyType'].errors && f['propertyType'].touched">
-        <small *ngIf="f['propertyType'].errors['required']">PropertyType is required</small></div>
-   <br><br>
-
-    <label>Rating: </label>
-    <input type="text" formControlName="userRating">
-    <div *ngIf="f['userRating'].errors && f['userRating'].touched">
-        <small *ngIf="f['userRating'].errors['required']">Rating is required</small>
-        <small *ngIf="f['userRating'].errors['min'] || f['userRating'].errors['max']">Rating must be between 1 to 5</small>
-    </div>
-    <br><br>
-    <label>Email: </label>
-    <input type="text" formControlName="email">
-    <div *ngIf="f['email'].errors && f['email'].touched">
-        <small *ngIf="f['email'].errors['required']">Email is required</small>
-        <small *ngIf="f['email'].errors['pattern'] ">Email invalid format</small>
-    </div>
-    <br><br>
-    <label>Mobile: </label>
-    <input type="text" formControlName="mobile">
-    <div *ngIf="f['mobile'].errors && f['mobile'].touched">
-        <small *ngIf="f['mobile'].errors['required']">Mobile No is required</small>
-        <small *ngIf="f['mobile'].errors['pattern'] ">Mobile invalid format</small>
-    </div>
-    <br><br>
-
-    <label>InquiryCount: </label>
-    <input type="text" formControlName="inquiryCount">
-   <br><br>
-   <!-- <p>{{edit}}</p> -->
-   
-<!-- <button type="submit" [disabled]="listForm.invalid">
-    {{ edit ? 'Update' : 'Register' }}
-  </button> -->
-  <button type="submit" [disabled]="listForm.invalid">Register</button>
-   <!-- <button [disabled]="!listForm.valid">Register</button> -->
-   <div *ngIf="showAlert">{{successMessage}}</div>
-
-</form>
+<div *ngIf="list.errors?.['range'] && (f['startD'].touched || f['endD'].touched)">
+    <small>End date must be after start date.</small>
+</div>
+</div>
+  
+      <!-- Submit -->
+      <div class="text-center mt-3">
+        <button type="submit" class="btn btn-primary" [disabled]="list.invalid">
+          {{updId ? "Update" :"Submit"}}
+        </button>
+      </div>
+    </form>
+  </div>
